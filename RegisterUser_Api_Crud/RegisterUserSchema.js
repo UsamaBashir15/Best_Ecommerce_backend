@@ -1,6 +1,16 @@
 import Joi from "joi";
 import mongoose from "mongoose";
 
+const complexityOptions = {
+  min: 3,
+  max: 15,
+  lowerCase: 1,
+  upperCase: 1,
+  numeric: 1,
+  symbol: 1,
+  requirementCount: 2,
+};
+
 const userSchema = mongoose.Schema({
   name: {
     require: true,
@@ -21,14 +31,6 @@ const userSchema = mongoose.Schema({
     minlength: 7,
     maxlength: 300,
   },
-  tokens: [
-    {
-      token: {
-        require: true,
-        type: String,
-      },
-    },
-  ],
 });
 
 const User = mongoose.model("RegisterUser", userSchema);
@@ -37,9 +39,8 @@ const ValidateUser = (user) => {
   const schema = Joi.object({
     name: Joi.string().min(3).max(18).required(),
     email: Joi.string().min(7).max(25).required().email(),
-    password: Joi.string().min(7).max(25).required(),
-    confirmPassword: Joi.string().min(7).max(25).required(),
-    tokens: Joi.object({ token: Joi.string().required() }),
+    password: Joi.string(),
+    confirmPassword: Joi.string(),
   });
   return schema.validate(user);
 };

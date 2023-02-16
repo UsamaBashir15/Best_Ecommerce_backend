@@ -29,6 +29,7 @@ const cartProductSchema = mongoose.Schema({
     minlength: 7,
     maxlength: 30000000,
   },
+  userId: { require: true, type: String },
 });
 
 const CartProduct = mongoose.model("CartProduct", cartProductSchema);
@@ -40,6 +41,7 @@ const ValidateCartProduct = (product) => {
     productSubTotal: Joi.string().required(),
     productQuantity: Joi.number().required(),
     productPrice: Joi.number().min(7).max(3000000).required(),
+    userId: Joi.string().required(),
   });
   return schema.validate(product);
 };

@@ -1,5 +1,5 @@
 import express from "express";
-import { User, ValidateUser } from "../User_Schema/RegisterUserSchema.js";
+import { User, ValidateUser } from "./RegisterUserSchema.js";
 import bcrypt from "bcrypt";
 
 import CreateJwt from "../CreateJwt/CreateJwt.js";
@@ -17,11 +17,12 @@ registerUserRouter.post("/api/User", async (req, res) => {
     const salt = await bcrypt.genSalt(10);
 
     const hashedPassword = await bcrypt.hash(value.password, salt);
-    const user = await creatRegisterUser(res, value, hashedPassword);
+    const { user, token } = await creatRegisterUser(res, value, hashedPassword);
 
     const result = await user.save();
 
-    return res.send(result);
+    // return res.setHeader("user_auth_token", token).send(result);
+    res.send(token);
   } else {
     return res.status(400).send("Password not matched");
   }
@@ -43,7 +44,7 @@ registerUserRouter.put("/api/User/:id", async (req, res) => {
   res.send(result);
 });
 
-registerUserRouter.delete("/api/User/:id", async () => {
+registerUserRouter.delete("/api/User/:id", async (req, res) => {
   const result = await User.findByIdAndRemove(req.params.id);
   if (!result) res.status(404).send("Not Find This id");
   res.send(result);
@@ -58,6 +59,7 @@ const creatRegisterUser = async (res, value, hashedPassword) => {
     password: hashedPassword,
   });
   const token = CreateJwt(user);
-  user.tokens = user.tokens.concat({ token });
-  return user;
+  // user.tokens = user.tokens.concat({ token });
+
+  return { user: user, token: token };
 };

@@ -4,13 +4,7 @@ import { CartProduct, ValidateCartProduct } from "./CartProduct_schema.js";
 const cartProductRouter = express.Router();
 
 cartProductRouter.post("/api/CartProduct", async (req, res) => {
-  let cartProduct = new CartProduct({
-    productImage: req.body.productImage,
-    productName: req.body.productName,
-    productPrice: req.body.productPrice,
-    productSubTotal: req.body.productSubTotal,
-    productQuantity: req.body.productQuantity,
-  });
+  let cartProduct = new CartProduct(req.body);
 
   const result = await cartProduct.save();
 
@@ -23,14 +17,14 @@ cartProductRouter.get("/api/CartProduct", async (req, res) => {
   res.send(result);
 });
 
+cartProductRouter.get("/api/CartProduct/:userId", async (req, res) => {
+  const result = await CartProduct.find({ userId: req.params.userId });
+
+  res.send(result);
+});
+
 cartProductRouter.put("/api/CartProduct/:id", async (req, res) => {
-  const result = await CartProduct.findByIdAndUpdate(req.params.id, {
-    productImage: req.body.productImage,
-    productName: req.body.productName,
-    productPrice: req.body.productPrice,
-    productSubTotal: req.body.productSubTotal,
-    productQuantity: req.body.productQuantity,
-  });
+  const result = await CartProduct.findByIdAndUpdate(req.params.id, req.body);
 
   res.send(result);
 });
@@ -42,3 +36,11 @@ cartProductRouter.delete("/api/CartProduct/:id", async (req, res) => {
 });
 
 export default cartProductRouter;
+
+// {
+//     productImage: req.body.productImage,
+//     productName: req.body.productName,
+//     productPrice: req.body.productPrice,
+//     productSubTotal: req.body.productSubTotal,
+//     productQuantity: req.body.productQuantity,
+//   }

@@ -1,6 +1,6 @@
 import DbConnection from "./ConnectDb/connectdb.js";
 import express from "express";
-import RegisterUserRouter from "./RegisterUser_Api_Crud/post.js";
+import RegisterUserRouter from "./RegisterUser_Api_Crud/Register.js";
 import bodyParser from "body-parser";
 import * as dotenv from "dotenv";
 import cors from "cors";
